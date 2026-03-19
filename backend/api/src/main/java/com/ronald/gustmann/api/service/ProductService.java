@@ -1,8 +1,7 @@
 package com.ronald.gustmann.api.service;
 
-import com.ronald.gustmann.api.dto.ProductCreateDTO;
-import com.ronald.gustmann.api.dto.ProductRequestDTO;
-import com.ronald.gustmann.api.dto.ProductResponseDTO;
+import com.ronald.gustmann.api.dto.*;
+import com.ronald.gustmann.api.model.Producer;
 import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -27,18 +26,13 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product nao encontrado"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
         product.setName(productRequestDTO.name());
         product.setCategory(productRequestDTO.category());
         product.setPrice(productRequestDTO.price());
 
         product =  productRepository.save(product);
         return new ProductResponseDTO(product);
-    }
-
-    @Transactional
-    public void delete(Product product) {
-        productRepository.delete(product);
     }
 
     @Transactional
@@ -49,8 +43,14 @@ public class ProductService {
     }
 
     @Transactional
+    public ProductResponseDTO findById(Long id) {
+        return new ProductResponseDTO(productRepository.findById(id)
+                                        .orElseThrow(() -> new RuntimeException("Produto nao encontrado")));
+    }
+
+    @Transactional
     public void delete(Long id) {
-        productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product nao encontrado"));
+        productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
         productRepository.deleteById(id);
     }
 }
