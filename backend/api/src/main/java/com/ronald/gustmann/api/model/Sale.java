@@ -20,7 +20,6 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_producer")
     private Producer producer;
