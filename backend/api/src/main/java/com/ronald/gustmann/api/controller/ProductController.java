@@ -1,0 +1,47 @@
+package com.ronald.gustmann.api.controller;
+
+import com.ronald.gustmann.api.dto.ProductCreateDTO;
+import com.ronald.gustmann.api.dto.ProductRequestDTO;
+import com.ronald.gustmann.api.dto.ProductResponseDTO;
+import com.ronald.gustmann.api.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+    @Autowired
+    private ProductService productService;
+
+    @PostMapping("/create")
+    public ResponseEntity create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
+        try{
+            productService.create(productCreateDTO);
+            return ResponseEntity.created(null).build();
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity findAllProduct(ProductCreateDTO productCreateDTO) {
+        try{
+            return ResponseEntity.ok(productService.findAll());
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ProductRequestDTO dto) {
+        return ResponseEntity.ok().body(productService.update(id, dto));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
