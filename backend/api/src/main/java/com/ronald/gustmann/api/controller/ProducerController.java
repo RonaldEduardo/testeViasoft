@@ -1,8 +1,10 @@
 package com.ronald.gustmann.api.controller;
 
-import com.ronald.gustmann.api.dto.*;
+import com.ronald.gustmann.api.dto.producer.ProducerCreateDTO;
+import com.ronald.gustmann.api.dto.producer.ProducerRequestDTO;
+import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
+import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
 import com.ronald.gustmann.api.service.ProducerService;
-import com.ronald.gustmann.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,10 @@
 package com.ronald.gustmann.api.service;
 
-import com.ronald.gustmann.api.dto.*;
+import com.ronald.gustmann.api.dto.producer.ProducerCreateDTO;
+import com.ronald.gustmann.api.dto.producer.ProducerRequestDTO;
+import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
 import com.ronald.gustmann.api.model.Producer;
-import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.repository.ProducerRepository;
-import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

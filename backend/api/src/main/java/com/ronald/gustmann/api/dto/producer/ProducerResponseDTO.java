@@ -1,8 +1,6 @@
-package com.ronald.gustmann.api.dto;
+package com.ronald.gustmann.api.dto.producer;
 
 import com.ronald.gustmann.api.model.Producer;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 public record ProducerResponseDTO(
         String name,

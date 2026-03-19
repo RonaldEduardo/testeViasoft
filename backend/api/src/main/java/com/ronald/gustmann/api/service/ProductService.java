@@ -1,7 +1,8 @@
 package com.ronald.gustmann.api.service;
 
-import com.ronald.gustmann.api.dto.*;
-import com.ronald.gustmann.api.model.Producer;
+import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
+import com.ronald.gustmann.api.dto.product.ProductRequestDTO;
+import com.ronald.gustmann.api.dto.product.ProductResponseDTO;
 import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
