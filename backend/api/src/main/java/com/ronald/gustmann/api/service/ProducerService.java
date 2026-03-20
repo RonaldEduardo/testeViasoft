@@ -3,6 +3,7 @@ package com.ronald.gustmann.api.service;
 import com.ronald.gustmann.api.dto.producer.ProducerCreateDTO;
 import com.ronald.gustmann.api.dto.producer.ProducerRequestDTO;
 import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
+import com.ronald.gustmann.api.exceptions.EntityNotFoundException;
 import com.ronald.gustmann.api.mapper.ProducerMapper;
 import com.ronald.gustmann.api.model.Producer;
 import com.ronald.gustmann.api.repository.ProducerRepository;
@@ -34,13 +35,13 @@ public class ProducerService {
     @Transactional
     public ProducerResponseDTO findById(Long id) {
         Producer producer = producerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produtor nao encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException(Producer.class, id));
         return producerMapper.toResponse(producer);
     }
 
     @Transactional
     public ProducerResponseDTO update(Long id, ProducerRequestDTO producerRequestDTO) {
-        Producer producer = producerRepository.findById(id).orElseThrow(() -> new RuntimeException("Produtor nao encontrado"));
+        Producer producer = producerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Producer.class, id));
         producerMapper.updateFromRequest(producerRequestDTO, producer);
 
         producer = producerRepository.save(producer);
@@ -49,7 +50,7 @@ public class ProducerService {
 
     @Transactional
     public void delete(Long id) {
-        Producer producer = producerRepository.findById(id).orElseThrow(() -> new RuntimeException("Produtor nao encontrado"));
+        Producer producer = producerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Producer.class, id));
         producerRepository.deleteById(id);
     }
 }

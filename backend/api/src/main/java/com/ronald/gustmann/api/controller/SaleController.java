@@ -7,6 +7,7 @@ import com.ronald.gustmann.api.service.SaleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class SaleController {
         try {
             saleService.create(saleCreateDTO);
             return ResponseEntity.created(null).build();
+        } catch (ObjectOptimisticLockingFailureException e) {
+            return ResponseEntity.status(409).body("Conflito de concorrencia no estoque. Tente novamente.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -47,7 +50,11 @@ public class SaleController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<SaleResponseDTO> update(@PathVariable Long id, @Valid @RequestBody SaleRequestDTO dto) {
-        return ResponseEntity.ok().body(saleService.update(id, dto));
+        try {
+            return ResponseEntity.ok().body(saleService.update(id, dto));
+        } catch (ObjectOptimisticLockingFailureException e) {
+            return ResponseEntity.status(409).build();
+        }
     }
 
     @DeleteMapping(value = "/{id}")

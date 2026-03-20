@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,14 +25,18 @@ public class Sale {
     @JoinColumn(name = "sale_producer")
     private Producer producer;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "sale_products",
-            joinColumns = @JoinColumn(name = "sale_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SaleItem> saleItems = new ArrayList<>();
 
     @Column(length = 20)
     private Double totalValue;
+
+    public void setSaleItems(List<SaleItem> saleItems) {
+        this.saleItems.clear();
+        if (saleItems == null) {
+            return;
+        }
+        saleItems.forEach(item -> item.setSale(this));
+        this.saleItems.addAll(saleItems);
+    }
 }

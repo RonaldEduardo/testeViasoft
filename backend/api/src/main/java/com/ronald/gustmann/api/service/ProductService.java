@@ -3,8 +3,11 @@ package com.ronald.gustmann.api.service;
 import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
 import com.ronald.gustmann.api.dto.product.ProductRequestDTO;
 import com.ronald.gustmann.api.dto.product.ProductResponseDTO;
+import com.ronald.gustmann.api.exceptions.DefensiveNotContainRecipeException;
+import com.ronald.gustmann.api.exceptions.EntityNotFoundException;
 import com.ronald.gustmann.api.mapper.ProductMapper;
 import com.ronald.gustmann.api.model.Product;
+import com.ronald.gustmann.api.model.enums.Category;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +26,8 @@ public class ProductService {
 
     @Transactional
     public Product create(ProductCreateDTO productCreateDTO) {
-        if(productCreateDTO.category().equals("DEFENSIVO") && Objects.isNull(productCreateDTO.recipeProduct())) {
-            throw new RuntimeException("O defensivo precisa contei uma receita");
+        if (Category.DEFENSIVO.equals(productCreateDTO.category()) && Objects.isNull(productCreateDTO.recipeProduct())) {
+            throw new DefensiveNotContainRecipeException();
         }
         Product product = productMapper.toEntity(productCreateDTO);
         return productRepository.save(product);
@@ -32,7 +35,7 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Product.class, id));
         productMapper.updateFromRequest(productRequestDTO, product);
 
         product =  productRepository.save(product);
@@ -47,13 +50,13 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException(Product.class, id));
         return productMapper.toResponse(product);
     }
 
     @Transactional
     public void delete(Long id) {
-        productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
+        productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Product.class, id));
         productRepository.deleteById(id);
     }
 }

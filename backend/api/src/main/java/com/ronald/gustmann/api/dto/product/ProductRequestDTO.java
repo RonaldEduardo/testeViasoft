@@ -3,8 +3,8 @@ package com.ronald.gustmann.api.dto.product;
 import com.ronald.gustmann.api.model.enums.Category;
 import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.model.enums.Safra;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record ProductRequestDTO(
@@ -16,6 +16,9 @@ public record ProductRequestDTO(
 
         Category category,
 
+        @PositiveOrZero(message = "A quantidade em estoque nao pode ser negativa")
+        Integer stockQuantity,
+
         Safra safra
 ) {
 
@@ -24,6 +27,7 @@ public record ProductRequestDTO(
                 entity.getName(),
                 entity.getPrice(),
                 entity.getCategory(),
+                entity.getStockQuantity(),
                 entity.getSafra()
         );
     }

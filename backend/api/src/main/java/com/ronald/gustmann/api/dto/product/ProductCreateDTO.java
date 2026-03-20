@@ -5,6 +5,7 @@ import com.ronald.gustmann.api.model.enums.Safra;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record ProductCreateDTO (
@@ -20,6 +21,10 @@ public record ProductCreateDTO (
         Category category,
 
         String recipeProduct,
+
+        @NotNull(message = "A quantidade em estoque e obrigatoria")
+        @PositiveOrZero(message = "A quantidade em estoque nao pode ser negativa")
+        Integer stockQuantity,
 
         @NotNull(message = "A safra é obrigatória")
         Safra safra

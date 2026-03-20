@@ -33,6 +33,12 @@ public class Product {
     @Column(length = 100, nullable = false)
     private String recipeProduct;
 
+    @Column(nullable = false)
+    private Integer stockQuantity;
+
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private Safra safra;

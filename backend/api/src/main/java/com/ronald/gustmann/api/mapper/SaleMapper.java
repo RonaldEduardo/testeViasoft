@@ -1,34 +1,37 @@
 package com.ronald.gustmann.api.mapper;
 
-import com.ronald.gustmann.api.dto.sale.SaleCreateDTO;
+import com.ronald.gustmann.api.dto.sale.SaleItemResponseDTO;
 import com.ronald.gustmann.api.dto.sale.SaleResponseDTO;
 import com.ronald.gustmann.api.model.Producer;
-import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.model.Sale;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.ronald.gustmann.api.model.SaleItem;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface SaleMapper {
-    @Mapping(target = "producerId", source = "producer.id")
-    @Mapping(target = "productIds", source = "products")
-    SaleResponseDTO toResponse(Sale entity);
+@Component
+public class SaleMapper {
+    public SaleResponseDTO toResponse(Sale entity) {
+        List<SaleItemResponseDTO> items = entity.getSaleItems().stream()
+                .map(item -> new SaleItemResponseDTO(
+                        item.getProduct().getId(),
+                        item.getQuantity(),
+                        item.getPriceAtTimeOfSale()
+                ))
+                .toList();
+        return new SaleResponseDTO(entity.getProducer().getId(), items, entity.getTotalValue());
+    }
 
-    @Mapping(target = "id", ignore = true) // O ID é gerado pelo banco
-    @Mapping(target = "producer", source = "producer")
-    @Mapping(target = "products", source = "products")
-    @Mapping(target = "totalValue", source = "totalValue")
-    Sale toEntity(Producer producer, List<Product> products, Double totalValue);
+    public Sale toEntity(Producer producer, List<SaleItem> saleItems, Double totalValue) {
+        Sale sale = new Sale();
+        sale.setProducer(producer);
+        sale.setTotalValue(totalValue);
+        sale.setSaleItems(saleItems);
+        return sale;
+    }
 
-    List<SaleResponseDTO> toResponseList(List<Sale> entities);
-
-    default List<Long> mapProductsToIds(List<Product> products) {
-        if (products == null) {
-            return List.of();
-        }
-        return products.stream().map(Product::getId).toList();
+    public List<SaleResponseDTO> toResponseList(List<Sale> entities) {
+        return entities.stream().map(this::toResponse).toList();
     }
 }
 

@@ -11,6 +11,8 @@ public record ProductResponseDTO(
 
         Category category,
 
+        Integer stockQuantity,
+
         Safra safra
 ) {
 
@@ -19,6 +21,7 @@ public record ProductResponseDTO(
                 entity.getName(),
                 entity.getPrice(),
                 entity.getCategory(),
+                entity.getStockQuantity(),
                 entity.getSafra()
         );
     }

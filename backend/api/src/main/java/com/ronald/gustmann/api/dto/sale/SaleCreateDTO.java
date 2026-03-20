@@ -9,8 +9,8 @@ public record SaleCreateDTO(
         @NotNull(message = "O produtor e obrigatorio")
         Long producerId,
 
-        @NotEmpty(message = "A lista de produtos e obrigatoria")
-        List<Long> productIds
+        @NotEmpty(message = "A lista de itens e obrigatoria")
+        List<SaleItemDTO> items
 ) {
 }
 
