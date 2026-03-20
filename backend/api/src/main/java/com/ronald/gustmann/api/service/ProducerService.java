@@ -8,18 +8,20 @@ import com.ronald.gustmann.api.mapper.ProducerMapper;
 import com.ronald.gustmann.api.model.Producer;
 import com.ronald.gustmann.api.repository.ProducerRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ProducerService {
-    @Autowired
-    private ProducerRepository producerRepository;
+    private final ProducerRepository producerRepository;
 
-    @Autowired
-    private ProducerMapper producerMapper;
+    private final ProducerMapper producerMapper;
+
+    public ProducerService(ProducerRepository producerRepository, ProducerMapper producerMapper) {
+        this.producerRepository = producerRepository;
+        this.producerMapper = producerMapper;
+    }
 
     @Transactional
     public Producer create(ProducerCreateDTO producerCreateDTO) {

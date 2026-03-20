@@ -17,7 +17,6 @@ import com.ronald.gustmann.api.repository.ProductRepository;
 import com.ronald.gustmann.api.repository.SaleRepository;
 import com.ronald.gustmann.api.utils.SeasonUtils;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,17 +26,23 @@ import java.util.Map;
 
 @Service
 public class SaleService {
-    @Autowired
-    private SaleRepository saleRepository;
+    private final SaleRepository saleRepository;
 
-    @Autowired
-    private SaleMapper saleMapper;
+    private final SaleMapper saleMapper;
 
-    @Autowired
-    private ProducerRepository producerRepository;
+    private final ProducerRepository producerRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    public SaleService(SaleRepository saleRepository,
+                       SaleMapper saleMapper,
+                       ProducerRepository producerRepository,
+                       ProductRepository productRepository) {
+        this.saleRepository = saleRepository;
+        this.saleMapper = saleMapper;
+        this.producerRepository = producerRepository;
+        this.productRepository = productRepository;
+    }
 
     @Transactional
     public Sale create(SaleCreateDTO saleCreateDTO) {

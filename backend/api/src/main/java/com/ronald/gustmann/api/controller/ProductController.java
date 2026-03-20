@@ -5,15 +5,17 @@ import com.ronald.gustmann.api.dto.product.ProductRequestDTO;
 import com.ronald.gustmann.api.dto.product.ProductResponseDTO;
 import com.ronald.gustmann.api.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {

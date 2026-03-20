@@ -5,9 +5,7 @@ import com.ronald.gustmann.api.dto.sale.SaleRequestDTO;
 import com.ronald.gustmann.api.dto.sale.SaleResponseDTO;
 import com.ronald.gustmann.api.service.SaleService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/sales")
 public class SaleController {
-    @Autowired
-    private SaleService saleService;
+    private final SaleService saleService;
+
+    public SaleController(SaleService saleService) {
+        this.saleService = saleService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity create(@Valid @RequestBody SaleCreateDTO saleCreateDTO) {

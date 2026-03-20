@@ -6,7 +6,6 @@ import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
 import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
 import com.ronald.gustmann.api.service.ProducerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/producers")
 public class ProducerController {
-    @Autowired
-    private ProducerService producerService;
+    private final ProducerService producerService;
+
+    public ProducerController(ProducerService producerService) {
+        this.producerService = producerService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<ProducerResponseDTO> create(@Valid @RequestBody ProducerCreateDTO producerCreateDTO) {

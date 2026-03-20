@@ -10,7 +10,6 @@ import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.model.enums.Category;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +17,14 @@ import java.util.Objects;
 
 @Service
 public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
+
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
 
     @Transactional
     public Product create(ProductCreateDTO productCreateDTO) {
