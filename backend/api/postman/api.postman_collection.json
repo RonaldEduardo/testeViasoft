@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "testeViasoft API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection to exercise producers, products, and sales endpoints. IDs are placeholders because create endpoints do not return IDs and list responses do not include IDs for producer/product. Update the collection variables if your IDs differ."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "producerId", "value": "1" },
+    { "key": "productId1", "value": "1" },
+    { "key": "productId2", "value": "2" },
+    { "key": "productId3", "value": "3" },
+    { "key": "saleId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Producer - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produtor A\",\n  \"creditLimit\": 1000.0,\n  \"cnpj\": \"12345678901234\"\n}"
+        },
+        "url": "{{baseUrl}}/producers/create"
+      }
+    },
+    {
+      "name": "Producer - Get By Id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/producers/{{producerId}}"
+      }
+    },
+    {
+      "name": "Producer - List All",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/producers/all"
+      }
+    },
+    {
+      "name": "Producer - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produtor A Atualizado\",\n  \"creditLimit\": 1500.0,\n  \"cnpj\": \"12345678901234\"\n}"
+        },
+        "url": "{{baseUrl}}/producers/{{producerId}}"
+      }
+    },
+    {
+      "name": "Producer - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/producers/{{producerId}}"
+      }
+    },
+    {
+      "name": "Product - Create A",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produto A\",\n  \"price\": 10.0,\n  \"category\": \"SEMENTE\",\n  \"recipeProduct\": \"Receita A\",\n  \"safra\": \"VERAO\"\n}"
+        },
+        "url": "{{baseUrl}}/products/create"
+      }
+    },
+    {
+      "name": "Product - Create B",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produto B\",\n  \"price\": 15.0,\n  \"category\": \"DEFENSIVO\",\n  \"recipeProduct\": \"Receita B\",\n  \"safra\": \"VERAO\"\n}"
+        },
+        "url": "{{baseUrl}}/products/create"
+      }
+    },
+    {
+      "name": "Product - Create C",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produto C\",\n  \"price\": 20.0,\n  \"category\": \"FERTILIZANTE\",\n  \"recipeProduct\": \"Receita C\",\n  \"safra\": \"VERAO\"\n}"
+        },
+        "url": "{{baseUrl}}/products/create"
+      }
+    },
+    {
+      "name": "Product - List All",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/products"
+      }
+    },
+    {
+      "name": "Product - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produto A Atualizado\",\n  \"price\": 12.5,\n  \"category\": \"SEMENTE\",\n  \"safra\": \"VERAO\"\n}"
+        },
+        "url": "{{baseUrl}}/products/{{productId1}}"
+      }
+    },
+    {
+      "name": "Product - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/products/{{productId2}}"
+      }
+    },
+    {
+      "name": "Sale - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"producerId\": {{producerId}},\n  \"productIds\": [{{productId1}}, {{productId2}}]\n}"
+        },
+        "url": "{{baseUrl}}/sales/create"
+      }
+    },
+    {
+      "name": "Sale - List All",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/sales/all"
+      }
+    },
+    {
+      "name": "Sale - Get By Id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/sales/{{saleId}}"
+      }
+    },
+    {
+      "name": "Sale - Update (Add Product)",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"producerId\": {{producerId}},\n  \"productIds\": [{{productId1}}, {{productId2}}, {{productId3}}]\n}"
+        },
+        "url": "{{baseUrl}}/sales/{{saleId}}"
+      }
+    },
+    {
+      "name": "Sale - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/sales/{{saleId}}"
+      }
+    }
+  ]
+}
+
