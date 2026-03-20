@@ -3,6 +3,7 @@ package com.ronald.gustmann.api.service;
 import com.ronald.gustmann.api.dto.sale.SaleCreateDTO;
 import com.ronald.gustmann.api.dto.sale.SaleRequestDTO;
 import com.ronald.gustmann.api.dto.sale.SaleResponseDTO;
+import com.ronald.gustmann.api.mapper.SaleMapper;
 import com.ronald.gustmann.api.model.Producer;
 import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.model.Sale;
@@ -21,6 +22,9 @@ import java.util.List;
 public class SaleService {
     @Autowired
     private SaleRepository saleRepository;
+
+    @Autowired
+    private SaleMapper saleMapper;
 
     @Autowired
     private ProducerRepository producerRepository;
@@ -48,24 +52,20 @@ public class SaleService {
             throw new RuntimeException("Limite de credito insuficiente");
         }
 
-        Sale sale = new Sale();
-        sale.setProducer(producer);
-        sale.setProducts(products);
-        sale.setTotalValue(totalValue);
+        Sale sale = saleMapper.toEntity(producer, products, totalValue);
         return saleRepository.save(sale);
     }
 
     @Transactional
     public List<SaleResponseDTO> findAll() {
-        return saleRepository.findAll().stream()
-                .map(SaleResponseDTO::new)
-                .toList();
+        return saleMapper.toResponseList(saleRepository.findAll());
     }
 
     @Transactional
     public SaleResponseDTO findById(Long id) {
-        return new SaleResponseDTO(saleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venda nao encontrada")));
+        Sale sale = saleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Venda nao encontrada"));
+        return saleMapper.toResponse(sale);
     }
 
     @Transactional
@@ -95,7 +95,7 @@ public class SaleService {
         sale.setTotalValue(totalValue);
 
         sale = saleRepository.save(sale);
-        return new SaleResponseDTO(sale);
+        return saleMapper.toResponse(sale);
     }
 
     @Transactional

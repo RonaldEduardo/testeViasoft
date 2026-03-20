@@ -17,7 +17,7 @@ public class Producer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 100)
     private String name;
 
     @Column(length = 14)

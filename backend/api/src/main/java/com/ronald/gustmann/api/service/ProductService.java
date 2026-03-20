@@ -3,6 +3,7 @@ package com.ronald.gustmann.api.service;
 import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
 import com.ronald.gustmann.api.dto.product.ProductRequestDTO;
 import com.ronald.gustmann.api.dto.product.ProductResponseDTO;
+import com.ronald.gustmann.api.mapper.ProductMapper;
 import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -17,40 +18,37 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductMapper productMapper;
+
     @Transactional
     public Product create(ProductCreateDTO productCreateDTO) {
-        if(productCreateDTO.category().equals("DEFENSIVO") && !Objects.isNull(productCreateDTO.recipeProduct())) {
-            new RuntimeException("O defensivo precisa contei uma receita");
+        if(productCreateDTO.category().equals("DEFENSIVO") && Objects.isNull(productCreateDTO.recipeProduct())) {
+            throw new RuntimeException("O defensivo precisa contei uma receita");
         }
-        Product product = new Product();
-        product.setName(productCreateDTO.name());
-        product.setCategory(productCreateDTO.category());
-        product.setPrice(productCreateDTO.price());
+        Product product = productMapper.toEntity(productCreateDTO);
         return productRepository.save(product);
     }
 
     @Transactional
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
-        product.setName(productRequestDTO.name());
-        product.setCategory(productRequestDTO.category());
-        product.setPrice(productRequestDTO.price());
+        productMapper.updateFromRequest(productRequestDTO, product);
 
         product =  productRepository.save(product);
-        return new ProductResponseDTO(product);
+        return productMapper.toResponse(product);
     }
 
     @Transactional
     public List<ProductResponseDTO> findAll() {
-        return productRepository.findAll().stream()
-                .map(ProductResponseDTO::new)
-                .toList();
+        return productMapper.toResponseList(productRepository.findAll());
     }
 
     @Transactional
     public ProductResponseDTO findById(Long id) {
-        return new ProductResponseDTO(productRepository.findById(id)
-                                        .orElseThrow(() -> new RuntimeException("Produto nao encontrado")));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
+        return productMapper.toResponse(product);
     }
 
     @Transactional
