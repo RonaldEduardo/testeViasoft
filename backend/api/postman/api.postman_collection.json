@@ -65,7 +65,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Produto A\",\n  \"price\": 10.0,\n  \"category\": \"SEMENTE\",\n  \"recipeProduct\": \"Receita A\",\n  \"safra\": \"VERAO\"\n}"
+          "raw": "{\n  \"name\": \"Produto A\",\n  \"price\": 10.0,\n  \"category\": \"SEMENTE\",\n  \"recipeProduct\": \"Receita A\",\n  \"stockQuantity\": 50,\n  \"safra\": \"VERAO\"\n}"
         },
         "url": "{{baseUrl}}/products/create"
       }
@@ -77,7 +77,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Produto B\",\n  \"price\": 15.0,\n  \"category\": \"DEFENSIVO\",\n  \"recipeProduct\": \"Receita B\",\n  \"safra\": \"VERAO\"\n}"
+          "raw": "{\n  \"name\": \"Produto B\",\n  \"price\": 15.0,\n  \"category\": \"DEFENSIVO\",\n  \"recipeProduct\": \"Receita B\",\n  \"stockQuantity\": 40,\n  \"safra\": \"VERAO\"\n}"
         },
         "url": "{{baseUrl}}/products/create"
       }
@@ -89,7 +89,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Produto C\",\n  \"price\": 20.0,\n  \"category\": \"FERTILIZANTE\",\n  \"recipeProduct\": \"Receita C\",\n  \"safra\": \"VERAO\"\n}"
+          "raw": "{\n  \"name\": \"Produto C\",\n  \"price\": 20.0,\n  \"category\": \"FERTILIZANTE\",\n  \"recipeProduct\": \"Receita C\",\n  \"stockQuantity\": 30,\n  \"safra\": \"VERAO\"\n}"
         },
         "url": "{{baseUrl}}/products/create"
       }
@@ -108,7 +108,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Produto A Atualizado\",\n  \"price\": 12.5,\n  \"category\": \"SEMENTE\",\n  \"safra\": \"VERAO\"\n}"
+          "raw": "{\n  \"name\": \"Produto A Atualizado\",\n  \"price\": 12.5,\n  \"category\": \"SEMENTE\",\n  \"stockQuantity\": 60,\n  \"safra\": \"VERAO\"\n}"
         },
         "url": "{{baseUrl}}/products/{{productId1}}"
       }
@@ -127,7 +127,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"producerId\": {{producerId}},\n  \"productIds\": [{{productId1}}, {{productId2}}]\n}"
+          "raw": "{\n  \"producerId\": {{producerId}},\n  \"items\": [\n    { \"productId\": {{productId1}}, \"quantity\": 2 },\n    { \"productId\": {{productId2}}, \"quantity\": 1 }\n  ]\n}"
         },
         "url": "{{baseUrl}}/sales/create"
       }
@@ -153,7 +153,7 @@
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"producerId\": {{producerId}},\n  \"productIds\": [{{productId1}}, {{productId2}}, {{productId3}}]\n}"
+          "raw": "{\n  \"producerId\": {{producerId}},\n  \"items\": [\n    { \"productId\": {{productId1}}, \"quantity\": 1 },\n    { \"productId\": {{productId2}}, \"quantity\": 1 },\n    { \"productId\": {{productId3}}, \"quantity\": 1 }\n  ]\n}"
         },
         "url": "{{baseUrl}}/sales/{{saleId}}"
       }
