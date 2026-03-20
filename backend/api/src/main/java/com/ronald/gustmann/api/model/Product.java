@@ -1,6 +1,8 @@
 package com.ronald.gustmann.api.model;
 
 
+import com.ronald.gustmann.api.model.enums.Category;
+import com.ronald.gustmann.api.model.enums.Safra;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,4 +29,11 @@ public class Product {
 
     @Column(length = 20, nullable = false)
     private Double price;
+
+    @Column(length = 100, nullable = false)
+    private String recipeProduct;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Safra safra;
 }

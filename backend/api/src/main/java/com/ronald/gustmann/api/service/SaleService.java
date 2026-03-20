@@ -9,10 +9,12 @@ import com.ronald.gustmann.api.model.Sale;
 import com.ronald.gustmann.api.repository.ProducerRepository;
 import com.ronald.gustmann.api.repository.ProductRepository;
 import com.ronald.gustmann.api.repository.SaleRepository;
+import com.ronald.gustmann.api.utils.SeasonUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,6 +37,8 @@ public class SaleService {
         if (products.size() != saleCreateDTO.productIds().size()) {
             throw new RuntimeException("Produto nao encontrado");
         }
+
+        products = this.applyingDiscount(products);
 
         Double totalValue = products.stream()
                 .mapToDouble(Product::getPrice)
@@ -102,6 +106,18 @@ public class SaleService {
 
     private boolean validateProducerCredit(Producer producer, Double totalValue) {
         return producer.getCreditLimit() >= totalValue;
+    }
+
+    private List<Product> applyingDiscount(List<Product> products) {
+        products.forEach(p -> {
+            if (p.getSafra().equals(SeasonUtils.getSeason(LocalDate.now()))) {
+                p.setPrice(p.getPrice() * 0.05);
+            } else {
+                p.setPrice(p.getPrice());
+            }
+        });
+
+        return products;
     }
 }
 

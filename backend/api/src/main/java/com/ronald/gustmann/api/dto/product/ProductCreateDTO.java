@@ -1,6 +1,7 @@
 package com.ronald.gustmann.api.dto.product;
 
-import com.ronald.gustmann.api.model.Category;
+import com.ronald.gustmann.api.model.enums.Category;
+import com.ronald.gustmann.api.model.enums.Safra;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,5 +17,10 @@ public record ProductCreateDTO (
         Double price,
 
         @NotNull(message = "A categoria é obrigatória")
-        Category category
+        Category category,
+
+        String recipeProduct,
+
+        @NotNull(message = "A safra é obrigatória")
+        Safra safra
 ){}

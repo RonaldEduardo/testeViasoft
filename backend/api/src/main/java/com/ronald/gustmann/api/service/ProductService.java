@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductService {
@@ -18,6 +19,9 @@ public class ProductService {
 
     @Transactional
     public Product create(ProductCreateDTO productCreateDTO) {
+        if(productCreateDTO.category().equals("DEFENSIVO") && !Objects.isNull(productCreateDTO.recipeProduct())) {
+            new RuntimeException("O defensivo precisa contei uma receita");
+        }
         Product product = new Product();
         product.setName(productCreateDTO.name());
         product.setCategory(productCreateDTO.category());
