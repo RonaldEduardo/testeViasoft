@@ -20,41 +20,23 @@ public class SaleController {
 
     @PostMapping("/create")
     public ResponseEntity create(@Valid @RequestBody SaleCreateDTO saleCreateDTO) {
-        try {
-            saleService.create(saleCreateDTO);
-            return ResponseEntity.created(null).build();
-        } catch (ObjectOptimisticLockingFailureException e) {
-            return ResponseEntity.status(409).body("Conflito de concorrencia no estoque. Tente novamente.");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        saleService.create(saleCreateDTO);
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SaleResponseDTO> findSaleById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(saleService.findById(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(saleService.findById(id));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<SaleResponseDTO>> findAllSales() {
-        try {
-            return ResponseEntity.ok(saleService.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(saleService.findAll());
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<SaleResponseDTO> update(@PathVariable Long id, @Valid @RequestBody SaleRequestDTO dto) {
-        try {
-            return ResponseEntity.ok().body(saleService.update(id, dto));
-        } catch (ObjectOptimisticLockingFailureException e) {
-            return ResponseEntity.status(409).build();
-        }
+        return ResponseEntity.ok().body(saleService.update(id, dto));
     }
 
     @DeleteMapping(value = "/{id}")

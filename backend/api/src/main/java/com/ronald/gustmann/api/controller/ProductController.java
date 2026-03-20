@@ -17,21 +17,13 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
-        try{
-            productService.create(productCreateDTO);
-            return ResponseEntity.created(null).build();
-        }catch(Exception e){
-            return ResponseEntity.badRequest().build();
-        }
+        productService.create(productCreateDTO);
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping
     public ResponseEntity findAllProduct(ProductCreateDTO productCreateDTO) {
-        try{
             return ResponseEntity.ok(productService.findAll());
-        }catch(Exception e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PutMapping(value = "/{id}")

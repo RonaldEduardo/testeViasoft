@@ -20,30 +20,18 @@ public class ProducerController {
 
     @PostMapping("/create")
     public ResponseEntity<ProducerResponseDTO> create(@Valid @RequestBody ProducerCreateDTO producerCreateDTO) {
-        try {
-            producerService.create(producerCreateDTO);
-            return ResponseEntity.created(null).build(); // TODO: analise sobre o location
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        producerService.create(producerCreateDTO);
+        return ResponseEntity.created(null).build(); // TODO: analise sobre o location
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProducerResponseDTO> findProducerById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(producerService.findById(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(producerService.findById(id));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<ProducerResponseDTO>> findAllProducers(ProductCreateDTO productCreateDTO) {
-        try {
-            return ResponseEntity.ok(producerService.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(producerService.findAll());
     }
 
     @PutMapping(value = "/{id}")
