@@ -2,21 +2,24 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductFormComponent } from './features/product/components/product-form/product-form.component';
 import { ProductListComponent } from './features/product/components/product-list/product-list.component';
+import { CheckoutComponent } from './features/sale/components/checkout/checkout.component';
 
 const routes: Routes = [
-  { path:'', redirectTo: '/products', pathMatch: 'full' },
+  { path: '', redirectTo: '/products', pathMatch: 'full' },
 
   { path: 'products', component: ProductListComponent },
+
+  { path: 'checkout', component: CheckoutComponent },
 
   { path: 'products/new', component: ProductFormComponent },
 
   { path: 'products/edit/:id', component: ProductFormComponent },
 
-  { path: '**', redirectTo: '/products' }
+  { path: '**', redirectTo: '/products' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

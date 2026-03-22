@@ -1,14 +1,37 @@
 <header class="bg-white shadow">
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
     <h1 class="text-xl font-bold text-gray-800">AgroTech</h1>
-    <nav class="flex gap-4">
+    <nav class="flex gap-4 items-center">
       <a
         *ngFor="let item of menu"
         [routerLink]="item.link"
-        class="text-sm text-gray-700 hover:text-blue-600 transition-colors"
+        class="text-sm text-gray-700 hover:text-blue-600"
       >
         {{ item.label }}
       </a>
+
+      <button
+        (click)="toggleModal()"
+        class="relative p-2 text-gray-700 hover:text-blue-600"
+      >
+        <span class="material-icons">shopping_cart</span>
+        <span
+          *ngIf="cartCount$ | async as count"
+          class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+        >
+          {{ count }}
+        </span>
+      </button>
     </nav>
   </div>
 </header>
+
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 z-50 flex justify-end bg-black bg-opacity-50"
+>
+  <app-cart-modal
+    (close)="toggleModal()"
+    (checkout)="goToCheckoutFromModal()"
+  ></app-cart-modal>
+</div>
