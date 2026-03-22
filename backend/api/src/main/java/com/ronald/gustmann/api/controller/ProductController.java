@@ -1,8 +1,10 @@
 package com.ronald.gustmann.api.controller;
 
+import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
 import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
 import com.ronald.gustmann.api.dto.product.ProductRequestDTO;
 import com.ronald.gustmann.api.dto.product.ProductResponseDTO;
+import com.ronald.gustmann.api.model.Product;
 import com.ronald.gustmann.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,11 @@ public class ProductController {
     @GetMapping
     public ResponseEntity findAllProduct(ProductCreateDTO productCreateDTO) {
             return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> findProducerById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @PutMapping(value = "/{id}")
