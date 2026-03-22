@@ -1,3 +1,4 @@
+import { CartService } from './../../../../shared/services/cart.service';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { Component, OnInit } from '@angular/core';
@@ -11,7 +12,10 @@ export class ProductListComponent implements OnInit {
   filtroNome: string = '';
   filtroCategoria: string = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+  ) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
@@ -31,6 +35,11 @@ export class ProductListComponent implements OnInit {
 
       return matchNome && matchCategoria;
     });
+  }
+
+  addToCart(product: Product) {
+    console.log('Adicionando ao carrinho:', product);
+    this.cartService.addToCart(product);
   }
 
   limparFiltros() {

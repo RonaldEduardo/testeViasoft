@@ -73,6 +73,14 @@
             Visualizar / Editar
           </button>
         </td>
+        <td class="py-3 px-4 border-b text-center">
+          <button
+            (click)="addToCart(product)"
+            class="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Adicionar ao Carrinho
+          </button>
+        </td>
       </tr>
 
       <tr *ngIf="products.length === 0">
