@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "ssles")
+@Table(name = "sales")
 @Getter
 @Setter
 @NoArgsConstructor
