@@ -146,11 +146,21 @@
       </div>
 
       <div
+        *ngIf="appliedDiscountValue > 0"
+        class="flex justify-between text-sm text-brand-charcoal mb-3"
+      >
+        <span>Desconto aplicado</span>
+        <span>
+          -{{ appliedDiscountValue | currency: "BRL" : "symbol" : "1.2-2" }}
+        </span>
+      </div>
+
+      <div
         class="border-t border-brand-cream pt-3 flex justify-between items-center"
       >
         <span class="text-brand-charcoal font-medium">Total da compra</span>
         <span class="text-xl font-bold text-brand-ink">
-          {{ totalValue | currency: "BRL" : "symbol" : "1.2-2" }}
+          {{ finalTotalValue | currency: "BRL" : "symbol" : "1.2-2" }}
         </span>
       </div>
     </aside>

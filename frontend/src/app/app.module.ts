@@ -8,8 +8,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { CartModalComponent } from './shared/components/cart-modal/cart-modal.component';
 import { CheckoutComponent } from './features/sale/components/checkout/checkout.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IconsModule } from './shared/icons.module';
+import { SalesReportComponent } from './features/sale/components/sales-report/sales-report.component';
 
 @NgModule({
   declarations: [
@@ -17,12 +18,14 @@ import { IconsModule } from './shared/icons.module';
     HeaderComponent,
     CartModalComponent,
     CheckoutComponent,
+    SalesReportComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ProductModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     IconsModule,
   ],

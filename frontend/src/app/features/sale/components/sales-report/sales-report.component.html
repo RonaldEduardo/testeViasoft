@@ -1,0 +1,230 @@
+<section
+  class="bg-brand-alabaster rounded-lg shadow-md border border-brand-cream p-4"
+>
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-semibold text-brand-ink">Minhas Vendas</h2>
+    <a
+      routerLink="/products"
+      class="text-sm text-brand-charcoal hover:text-brand-ink inline-flex items-center gap-2"
+    >
+      <ng-icon name="back" class="h-4 w-4"></ng-icon>
+      <span>Voltar para produtos</span>
+    </a>
+  </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="mb-4 rounded-md bg-brand-mint text-brand-ink px-4 py-3 text-sm"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div
+      class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
+    >
+      <label
+        for="producerFilter"
+        class="block text-sm font-medium text-brand-charcoal mb-2"
+      >
+        Produtor
+      </label>
+      <select
+        id="producerFilter"
+        [(ngModel)]="selectedProducerId"
+        class="w-full rounded-md border border-brand-sage px-3 py-2 bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint"
+      >
+        <option value="">Todos os produtores</option>
+        <option *ngFor="let producer of producers" [value]="producer.id">
+          {{ producer.name || "Produtor #" + producer.id }}
+        </option>
+      </select>
+    </div>
+
+    <div
+      class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
+    >
+      <label
+        for="periodStart"
+        class="block text-sm font-medium text-brand-charcoal mb-2"
+      >
+        Periodo inicial
+      </label>
+      <input
+        id="periodStart"
+        type="date"
+        [(ngModel)]="periodStart"
+        class="w-full rounded-md border border-brand-sage px-3 py-2 bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint"
+      />
+    </div>
+
+    <div
+      class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
+    >
+      <label
+        for="periodEnd"
+        class="block text-sm font-medium text-brand-charcoal mb-2"
+      >
+        Periodo final
+      </label>
+      <input
+        id="periodEnd"
+        type="date"
+        [(ngModel)]="periodEnd"
+        class="w-full rounded-md border border-brand-sage px-3 py-2 bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint"
+      />
+    </div>
+  </div>
+
+  <div
+    class="mb-6 bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream flex items-center justify-between"
+  >
+    <button
+      class="inline-flex items-center gap-2 text-brand-charcoal hover:text-brand-ink font-medium"
+      (click)="clearFilters()"
+      aria-label="Limpar filtros"
+    >
+      <ng-icon name="refresh" class="h-4 w-4"></ng-icon>
+      <span>Limpar filtros</span>
+    </button>
+
+    <p class="text-sm text-brand-charcoal">
+      Total filtrado:
+      <strong class="text-brand-ink">
+        {{ totalFilteredValue | currency: "BRL" : "symbol" : "1.2-2" }}
+      </strong>
+    </p>
+  </div>
+
+  <div *ngIf="isLoading" class="text-sm text-brand-charcoal px-1 pb-4">
+    Carregando vendas...
+  </div>
+
+  <div *ngIf="!isLoading" class="overflow-x-auto">
+    <table
+      class="min-w-full bg-brand-cream border border-brand-cream shadow-md rounded-lg"
+    >
+      <thead class="bg-brand-sage text-brand-ink">
+        <tr>
+          <th class="py-3 px-4 border-b text-left font-semibold">Venda</th>
+          <th class="py-3 px-4 border-b text-left font-semibold">Produtor</th>
+          <th class="py-3 px-4 border-b text-left font-semibold">Itens</th>
+          <th class="py-3 px-4 border-b text-left font-semibold">Total</th>
+          <th class="py-3 px-4 border-b text-center font-semibold">Detalhes</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container
+          *ngFor="
+            let sale of filteredSales;
+            let i = index;
+            trackBy: trackBySale
+          "
+        >
+          <tr class="hover:bg-brand-mint transition-colors duration-200">
+            <td class="py-3 px-4 border-b text-brand-ink">
+              {{ formatSaleLabel(sale, i) }}
+            </td>
+            <td class="py-3 px-4 border-b text-brand-charcoal">
+              {{ sale.producerName }}
+            </td>
+            <td class="py-3 px-4 border-b text-brand-charcoal">
+              {{ sale.itemCount }}
+            </td>
+            <td class="py-3 px-4 border-b text-brand-ink font-medium">
+              {{ sale.totalValue | currency: "BRL" : "symbol" : "1.2-2" }}
+            </td>
+            <td class="py-3 px-4 border-b text-center">
+              <button
+                class="inline-flex items-center gap-2 text-brand-charcoal hover:text-brand-ink font-medium"
+                (click)="toggleItems(sale, i)"
+              >
+                <ng-icon name="products" class="h-4 w-4"></ng-icon>
+                <span>
+                  {{ isExpanded(sale, i) ? "Ocultar itens" : "Ver itens" }}
+                </span>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="isExpanded(sale, i)">
+            <td colspan="5" class="bg-brand-alabaster px-4 py-4 border-b">
+              <div
+                *ngIf="sale.rawItems.length === 0"
+                class="text-sm text-brand-charcoal"
+              >
+                Nenhum item encontrado nesta venda.
+              </div>
+
+              <div *ngIf="sale.rawItems.length > 0" class="overflow-x-auto">
+                <table
+                  class="min-w-full bg-brand-cream border border-brand-cream rounded-md"
+                >
+                  <thead class="bg-brand-mint text-brand-ink">
+                    <tr>
+                      <th
+                        class="py-2 px-3 border-b text-left text-sm font-semibold"
+                      >
+                        Produto
+                      </th>
+                      <th
+                        class="py-2 px-3 border-b text-left text-sm font-semibold"
+                      >
+                        Qtd
+                      </th>
+                      <th
+                        class="py-2 px-3 border-b text-left text-sm font-semibold"
+                      >
+                        Unitario
+                      </th>
+                      <th
+                        class="py-2 px-3 border-b text-left text-sm font-semibold"
+                      >
+                        Subtotal
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of sale.rawItems">
+                      <td class="py-2 px-3 border-b text-sm text-brand-ink">
+                        {{ item.productName || "Produto #" + item.productId }}
+                      </td>
+                      <td
+                        class="py-2 px-3 border-b text-sm text-brand-charcoal"
+                      >
+                        {{ item.quantity }}
+                      </td>
+                      <td
+                        class="py-2 px-3 border-b text-sm text-brand-charcoal"
+                      >
+                        {{
+                          getItemUnitPrice(item)
+                            | currency: "BRL" : "symbol" : "1.2-2"
+                        }}
+                      </td>
+                      <td
+                        class="py-2 px-3 border-b text-sm text-brand-ink font-medium"
+                      >
+                        {{
+                          getItemTotal(item)
+                            | currency: "BRL" : "symbol" : "1.2-2"
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr *ngIf="!errorMessage && filteredSales.length === 0">
+          <td colspan="5" class="py-4 text-center text-brand-charcoal">
+            Nenhuma venda encontrada para os filtros informados.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

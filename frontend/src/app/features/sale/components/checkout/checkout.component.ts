@@ -9,6 +9,7 @@ import { Producer } from '../../models/producer';
 import { ProducerService } from '../../services/producer.service';
 import { SaleService } from '../../services/sale.service';
 import { SaleItemDTO } from '../../dto/saleItemDTO';
+import { SaleCreateResponseDTO } from '../../dto/sale-create-response.dto';
 import { CartService } from 'src/app/shared/services/cart.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   producers: Producer[] = [];
   items: SaleItemDTO[] = [];
   totalValue = 0;
+  appliedDiscountValue = 0;
   isSubmitting = false;
   errorMessage = '';
 
@@ -49,6 +51,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((total) => {
         this.totalValue = total;
+        this.appliedDiscountValue = 0;
       });
   }
 
@@ -57,6 +60,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((items) => {
         this.items = items;
+        this.appliedDiscountValue = 0;
       });
   }
 
@@ -126,7 +130,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: () => {
+        next: (response) => {
+          this.applyBackendCalculation(response);
           this.cartService.clearCart();
           this.router.navigate(['/products']);
         },
@@ -136,6 +141,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             'Nao foi possivel finalizar a compra. Tente novamente.';
         },
       });
+  }
+
+  get finalTotalValue(): number {
+    return Math.max(this.totalValue - this.appliedDiscountValue, 0);
+  }
+
+  private applyBackendCalculation(
+    response: SaleCreateResponseDTO | void,
+  ): void {
+    if (!response) {
+      return;
+    }
+
+    this.appliedDiscountValue = response.discountTotal || 0;
+    this.totalValue = response.grossTotal || this.totalValue;
   }
 
   ngOnDestroy(): void {
