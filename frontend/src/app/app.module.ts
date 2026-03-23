@@ -9,6 +9,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { CartModalComponent } from './shared/components/cart-modal/cart-modal.component';
 import { CheckoutComponent } from './features/sale/components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IconsModule } from './shared/icons.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProductModule,
     HttpClientModule,
     ReactiveFormsModule,
+    IconsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

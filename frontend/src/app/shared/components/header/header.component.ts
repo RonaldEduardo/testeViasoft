@@ -11,9 +11,9 @@ export class HeaderComponent implements OnInit {
   cartCount$ = this.cartService.count$;
 
   menu = [
-    { label: 'Produtos', link: '/products' },
-    { label: 'Novo Produto', link: '/products/new' },
-    { label: 'Checkout', link: '/checkout' },
+    { label: 'Produtos', link: '/products', icon: 'products' },
+    { label: 'Novo Produto', link: '/products/new', icon: 'newProduct' },
+    { label: 'Finalizar', link: '/checkout', icon: 'checkout' },
   ];
 
   constructor(

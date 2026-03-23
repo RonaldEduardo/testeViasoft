@@ -1,23 +1,25 @@
-<header class="bg-white shadow">
+<header class="bg-brand-alabaster shadow-sm border-b border-brand-cream">
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-    <h1 class="text-xl font-bold text-gray-800">AgroTech</h1>
+    <h1 class="text-xl font-bold text-brand-ink">AgroTech</h1>
     <nav class="flex gap-4 items-center">
       <a
         *ngFor="let item of menu"
         [routerLink]="item.link"
-        class="text-sm text-gray-700 hover:text-blue-600"
+        class="text-sm text-brand-charcoal hover:text-brand-ink inline-flex items-center gap-2"
       >
+        <ng-icon [name]="item.icon" class="h-4 w-4"></ng-icon>
         {{ item.label }}
       </a>
 
       <button
         (click)="toggleModal()"
-        class="relative p-2 text-gray-700 hover:text-blue-600"
+        class="relative p-2 text-brand-charcoal hover:text-brand-ink"
+        aria-label="Abrir carrinho"
       >
-        <span class="material-icons">shopping_cart</span>
+        <ng-icon name="cart" class="h-6 w-6"></ng-icon>
         <span
           *ngIf="cartCount$ | async as count"
-          class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+          class="absolute top-0 right-0 bg-brand-mint text-brand-ink text-xs rounded-full h-5 w-5 flex items-center justify-center ring-1 ring-brand-sage"
         >
           {{ count }}
         </span>
@@ -28,7 +30,7 @@
 
 <div
   *ngIf="isModalOpen"
-  class="fixed inset-0 z-50 flex justify-end bg-black bg-opacity-50"
+  class="fixed inset-0 z-50 flex justify-end bg-brand-ink bg-opacity-40"
 >
   <app-cart-modal
     (close)="toggleModal()"

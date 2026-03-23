@@ -1,11 +1,12 @@
-<div class="bg-white w-[30rem] h-full shadow-lg p-6 flex flex-col">
+<div class="bg-brand-alabaster w-[30rem] h-full shadow-lg p-6 flex flex-col">
   <div class="flex justify-between mb-4 items-center">
-    <h2 class="text-lg font-bold">Seu Carrinho</h2>
+    <h2 class="text-lg font-bold text-brand-ink">Seu Carrinho</h2>
     <button
-      class="text-sm text-gray-600 hover:text-gray-900"
+      class="text-brand-charcoal hover:text-brand-ink"
       (click)="onClose()"
+      aria-label="Fechar"
     >
-      Fechar
+      <ng-icon name="close" class="h-5 w-5"></ng-icon>
     </button>
   </div>
 
@@ -15,61 +16,67 @@
   >
     <div
       *ngFor="let p of productsInCart"
-      class="border border-gray-200 rounded-md p-3 mb-3"
+      class="border border-brand-cream bg-brand-cream rounded-md p-3 mb-3"
     >
-      <div class="font-medium text-gray-900">{{ p.product.name }}</div>
-      <div class="text-sm text-gray-600">{{ p.product.category }}</div>
-      <div class="text-sm text-gray-700 mt-1">
+      <div class="font-medium text-brand-ink">{{ p.product.name }}</div>
+      <div class="text-sm text-brand-charcoal">{{ p.product.category }}</div>
+      <div class="text-sm text-brand-charcoal mt-1">
         Unit.: {{ p.product.price | currency: "BRL" : "symbol" : "1.2-2" }}
       </div>
 
       <div class="flex items-center justify-between mt-3">
         <div class="flex items-center gap-2">
           <button
-            class="h-7 w-7 rounded border border-gray-300"
+            class="h-7 w-7 rounded border border-brand-sage text-brand-ink hover:bg-brand-mint"
             (click)="decreaseQuantity(p)"
+            aria-label="Diminuir quantidade"
           >
-            -
+            <ng-icon name="minus" class="h-4 w-4"></ng-icon>
           </button>
           <span class="min-w-[2rem] text-center">{{ p.quantity }}</span>
           <button
-            class="h-7 w-7 rounded border border-gray-300"
+            class="h-7 w-7 rounded border border-brand-sage text-brand-ink hover:bg-brand-mint"
             (click)="increaseQuantity(p)"
+            aria-label="Aumentar quantidade"
           >
-            +
+            <ng-icon name="plus" class="h-4 w-4"></ng-icon>
           </button>
         </div>
 
-        <div class="text-sm font-semibold text-gray-900">
+        <div class="text-sm font-semibold text-brand-ink">
           {{ p.total | currency: "BRL" : "symbol" : "1.2-2" }}
         </div>
       </div>
 
       <div class="mt-2">
         <button
-          class="text-xs text-red-600 hover:text-red-800"
+          class="text-brand-charcoal hover:text-brand-ink"
           (click)="removeItem(p)"
+          aria-label="Remover"
         >
-          Remover
+          <ng-icon name="remove" class="h-4 w-4"></ng-icon>
         </button>
       </div>
     </div>
 
-    <p *ngIf="productsInCart.length === 0" class="text-sm text-gray-500 mt-4">
+    <p
+      *ngIf="productsInCart.length === 0"
+      class="text-sm text-brand-charcoal mt-4"
+    >
       Seu carrinho esta vazio.
     </p>
   </div>
 
-  <div class="border-t border-gray-200 pt-4 mt-4">
+  <div class="border-t border-brand-cream pt-4 mt-4">
     <div class="flex items-center justify-between mb-3">
-      <span class="text-sm text-gray-600">Total</span>
-      <span class="text-base font-bold text-gray-900">
+      <span class="text-sm text-brand-charcoal">Total</span>
+      <span class="text-base font-bold text-brand-ink">
         {{ (total$ | async) || 0 | currency: "BRL" : "symbol" : "1.2-2" }}
       </span>
     </div>
 
     <button
-      class="w-full bg-blue-600 text-white py-2 rounded-md disabled:bg-gray-300"
+      class="w-full bg-brand-sage text-brand-ink py-2 rounded-md hover:bg-brand-mint disabled:bg-brand-cream disabled:text-brand-charcoal"
       [disabled]="((items$ | async)?.length || 0) === 0"
       (click)="onCheckout()"
     >
