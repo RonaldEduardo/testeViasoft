@@ -14,6 +14,6 @@ export class ProducerService {
   constructor(private http: HttpClient) {}
 
   getProducers(): Observable<Producer[]> {
-    return this.http.get<Producer[]>(this.API);
+    return this.http.get<Producer[]>(`${this.API}/all`);
   }
 }

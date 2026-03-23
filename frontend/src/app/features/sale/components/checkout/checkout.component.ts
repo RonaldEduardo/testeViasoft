@@ -37,6 +37,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.loadProducers();
+
+    this.loadCartItems();
+
+    this.updateTotalValueFromCart();
+  }
+
+  private updateTotalValueFromCart() {
+    this.cartService.total$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((total) => {
+        this.totalValue = total;
+      });
+  }
+
+  private loadCartItems() {
+    this.cartService.items$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((items) => {
+        this.items = items;
+      });
+  }
+
+  private loadProducers() {
     this.producerService
       .getProducers()
       .pipe(takeUntil(this.destroy$))
@@ -45,21 +69,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.producers = producers;
         },
         error: () => {
-          this.errorMessage =
-            'Nao foi possivel carregar produtores. Verifique a API.';
+          this.errorMessage = 'Nao foi possivel carregar produtores.';
         },
-      });
-
-    this.cartService.items$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((items) => {
-        this.items = items;
-      });
-
-    this.cartService.total$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((total) => {
-        this.totalValue = total;
       });
   }
 
@@ -79,15 +90,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cartService.removeFromCart(item.product.id);
   }
 
-  getProducerLabel(producer: Producer): string {
-    return (
-      producer.name ||
-      producer.fullName ||
-      producer.tradeName ||
-      `Produtor #${producer.id}`
-    );
-  }
-
   submitSale() {
     this.errorMessage = '';
 
@@ -97,8 +99,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     if (!this.items.length || this.totalValue <= 0) {
-      this.errorMessage =
-        'Carrinho vazio. Adicione itens antes de finalizar a compra.';
+      this.errorMessage = 'Carrinho vazio.';
       return;
     }
 

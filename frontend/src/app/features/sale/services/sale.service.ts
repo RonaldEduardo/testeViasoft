@@ -14,6 +14,6 @@ export class SaleService {
   constructor(private http: HttpClient) {}
 
   createSale(payload: SaleCreateDTO): Observable<void> {
-    return this.http.post<void>(this.API, payload);
+    return this.http.post<void>(`${this.API}/create`, payload);
   }
 }
