@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product';
 import { Category, CategoryLabels } from '../../models/enums/category';
@@ -14,6 +15,9 @@ export class ProductFormComponent implements OnInit {
   productForm!: FormGroup;
   productId: number | null = null;
   isEditMode = false;
+  readonly defensiveCategory = Category.DEFENSIVO;
+
+  private readonly destroy$ = new Subject<void>();
 
   optionsCategory = Object.entries(CategoryLabels).map(([value, label]) => ({
     value: Number(value),
@@ -34,6 +38,7 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.recipeProductValidation();
     this.loadProductIfEditMode();
   }
 
@@ -41,10 +46,39 @@ export class ProductFormComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       category: [null, [Validators.required]],
+      recipeProduct: [''],
       price: [null, [Validators.required, Validators.min(0.1)]],
       stockQuantity: [null, [Validators.required, Validators.min(0)]],
       safra: [null, [Validators.required]],
     });
+  }
+
+  private recipeProductValidation(): void {
+    this.productForm
+      .get('category')
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((categoryValue) => {
+        const recipeProductControl = this.productForm.get('recipeProduct');
+        const isDefensivo = Number(categoryValue) === Category.DEFENSIVO;
+
+        if (!recipeProductControl) {
+          return;
+        }
+
+        if (isDefensivo) {
+          recipeProductControl.setValidators([Validators.required]);
+        } else {
+          recipeProductControl.clearValidators();
+          recipeProductControl.setValue('');
+        }
+
+        recipeProductControl.updateValueAndValidity({ emitEvent: false });
+      });
+  }
+
+  get recipeProductField(): boolean {
+    const categoryValue = this.productForm.get('category')?.value;
+    return Number(categoryValue) === Category.DEFENSIVO;
   }
 
   private loadProductIfEditMode(): void {
@@ -66,7 +100,12 @@ export class ProductFormComponent implements OnInit {
       return;
     }
 
-    const payload: Product = this.productForm.value;
+    const formValue = this.productForm.getRawValue();
+    const payload: Product = {
+      ...formValue,
+      category: Number(formValue.category),
+      safra: Number(formValue.safra),
+    };
 
     if (this.isEditMode && this.productId !== null) {
       this.productService.update(this.productId, payload).subscribe(() => {
@@ -95,10 +134,21 @@ export class ProductFormComponent implements OnInit {
       this.productForm.patchValue({
         name: product.name,
         category: categoryValue,
+        recipeProduct:
+          product.recipeProduct ||
+          (product as Product & { recipeProduct?: string }).recipeProduct ||
+          '',
         price: product.price,
         stockQuantity: product.stockQuantity,
         safra: safraValue,
       });
+
+      this.productForm.get('category')?.updateValueAndValidity();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,65 +1,89 @@
-<div class="p-4 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4">
-  <h2 class="text-xl font-bold text-gray-800">Novo Produto</h2>
+<div class="p-6 max-w-lg mx-auto bg-brand-cream rounded-xl shadow-md space-y-4">
+  <h2 class="text-xl font-bold text-brand-ink">Novo Produto</h2>
 
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-4">
     <div>
-      <label class="block text-sm font-medium text-gray-700">Nome</label>
+      <label class="block text-sm font-medium text-brand-charcoal">Nome</label>
       <input
         type="text"
         formControlName="name"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        class="mt-1 block w-full rounded-md border border-brand-sage bg-brand-alabaster shadow-sm focus:border-brand-mint focus:ring-brand-mint"
       />
       <span
         *ngIf="
           productForm.get('name')?.invalid && productForm.get('name')?.touched
         "
-        class="text-xs text-red-500"
+        class="text-xs text-brand-ink"
       >
         Nome é obrigatório (mínimo 3 caracteres).
       </span>
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700">Categoria</label>
+      <label class="block text-sm font-medium text-brand-charcoal"
+        >Categoria</label
+      >
       <select
         id="category"
         name="category"
         formControlName="category"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        class="w-full px-3 py-2 border border-brand-sage rounded-md bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint cursor-pointer"
       >
+        <option [ngValue]="null">Selecione uma categoria</option>
         <option *ngFor="let cat of optionsCategory" [ngValue]="cat.value">
           {{ cat.label }}
         </option>
       </select>
     </div>
 
+    <div *ngIf="recipeProductField">
+      <label class="block text-sm font-medium text-brand-charcoal"
+        >Recipe</label
+      >
+      <input
+        type="text"
+        formControlName="recipeProduct"
+        placeholder="Informe a recipe do defensivo"
+        class="mt-1 block w-full rounded-md border border-brand-sage bg-brand-alabaster shadow-sm focus:border-brand-mint focus:ring-brand-mint"
+      />
+      <span
+        *ngIf="
+          productForm.get('recipeProduct')?.invalid &&
+          productForm.get('recipeProduct')?.touched
+        "
+        class="text-xs text-brand-ink"
+      >
+        Recipe é obrigatória para categoria Defensivo.
+      </span>
+    </div>
+
     <div>
-      <label class="block text-sm font-medium text-gray-700">Preço</label>
+      <label class="block text-sm font-medium text-brand-charcoal">Preço</label>
       <input
         type="number"
         formControlName="price"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        class="mt-1 block w-full rounded-md border border-brand-sage bg-brand-alabaster shadow-sm focus:border-brand-mint focus:ring-brand-mint"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700"
+      <label class="block text-sm font-medium text-brand-charcoal"
         >Quantidade em estoque</label
       >
       <input
         type="number"
         formControlName="stockQuantity"
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        class="mt-1 block w-full rounded-md border border-brand-sage bg-brand-alabaster shadow-sm focus:border-brand-mint focus:ring-brand-mint"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700">Safra</label>
+      <label class="block text-sm font-medium text-brand-charcoal">Safra</label>
       <select
         id="safra"
         name="safra"
         formControlName="safra"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        class="w-full px-3 py-2 border border-brand-sage rounded-md bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint cursor-pointer"
       >
         <option *ngFor="let safra of optionsSafra" [ngValue]="safra.value">
           {{ safra.label }}
@@ -67,7 +91,14 @@
       </select>
     </div>
 
-    <h2>{{ isEditMode ? "Editar Produto" : "Novo Produto" }}</h2>
-    <button type="submit">{{ isEditMode ? "Atualizar" : "Salvar" }}</button>
+    <h2 class="text-lg font-semibold text-brand-ink">
+      {{ isEditMode ? "Editar Produto" : "Novo Produto" }}
+    </h2>
+    <button
+      type="submit"
+      class="w-full bg-brand-sage text-brand-ink py-2 rounded-md hover:bg-brand-mint"
+    >
+      {{ isEditMode ? "Atualizar" : "Salvar" }}
+    </button>
   </form>
 </div>

@@ -3,8 +3,9 @@ import { Safra } from './enums/safra';
 
 export interface Product {
   id: number;
-  name: String;
+  name: string;
   price: number;
+  recipeProduct?: string;
   category: Category;
   stockQuantity: number;
   safra: Safra;
