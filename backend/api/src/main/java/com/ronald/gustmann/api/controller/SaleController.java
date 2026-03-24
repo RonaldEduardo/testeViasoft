@@ -1,8 +1,6 @@
 package com.ronald.gustmann.api.controller;
 
-import com.ronald.gustmann.api.dto.sale.SaleCreateDTO;
-import com.ronald.gustmann.api.dto.sale.SaleRequestDTO;
-import com.ronald.gustmann.api.dto.sale.SaleResponseDTO;
+import com.ronald.gustmann.api.dto.sale.*;
 import com.ronald.gustmann.api.service.SaleService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,9 @@ public class SaleController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(@Valid @RequestBody SaleCreateDTO saleCreateDTO) {
-        saleService.create(saleCreateDTO);
-        return ResponseEntity.created(null).build();
+    public ResponseEntity<SaleResponseDTO> create(@Valid @RequestBody SaleCreateDTO saleCreateDTO) {
+        SaleResponseDTO response = saleService.create(saleCreateDTO);
+        return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/{id}")
@@ -45,5 +43,10 @@ public class SaleController {
         saleService.delete(id);
         return ResponseEntity.noContent().build();
     }
-}
 
+    @PostMapping("/calculate-item")
+    public ResponseEntity<SaleItemResponseDTO> calculateItem(@RequestBody SaleItemDTO itemDTO) {
+        SaleItemResponseDTO calculated = saleService.calculateItemPrice(itemDTO);
+        return ResponseEntity.ok(calculated);
+    }
+}

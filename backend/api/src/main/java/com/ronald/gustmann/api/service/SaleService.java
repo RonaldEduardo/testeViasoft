@@ -1,9 +1,6 @@
 package com.ronald.gustmann.api.service;
 
-import com.ronald.gustmann.api.dto.sale.SaleCreateDTO;
-import com.ronald.gustmann.api.dto.sale.SaleItemDTO;
-import com.ronald.gustmann.api.dto.sale.SaleRequestDTO;
-import com.ronald.gustmann.api.dto.sale.SaleResponseDTO;
+import com.ronald.gustmann.api.dto.sale.*;
 import com.ronald.gustmann.api.exceptions.EntityNotFoundException;
 import com.ronald.gustmann.api.exceptions.InsufficientCreditLimitException;
 import com.ronald.gustmann.api.exceptions.InsufficientProductStockException;
@@ -35,9 +32,9 @@ public class SaleService {
     private final ProductRepository productRepository;
 
     public SaleService(SaleRepository saleRepository,
-                       SaleMapper saleMapper,
-                       ProducerRepository producerRepository,
-                       ProductRepository productRepository) {
+            SaleMapper saleMapper,
+            ProducerRepository producerRepository,
+            ProductRepository productRepository) {
         this.saleRepository = saleRepository;
         this.saleMapper = saleMapper;
         this.producerRepository = producerRepository;
@@ -45,7 +42,7 @@ public class SaleService {
     }
 
     @Transactional
-    public Sale create(SaleCreateDTO saleCreateDTO) {
+    public SaleResponseDTO create(SaleCreateDTO saleCreateDTO) {
         Producer producer = producerRepository.findById(saleCreateDTO.producerId())
                 .orElseThrow(() -> new EntityNotFoundException(Producer.class, saleCreateDTO.producerId()));
 
@@ -63,8 +60,15 @@ public class SaleService {
             throw new InsufficientCreditLimitException();
         }
 
+        if (Math.abs(saleCreateDTO.totalValue() - totalValue) > 0.01) {
+            throw new IllegalArgumentException("Divergência de valores. O preço dos produtos foi atualizado.");
+        }
+
+        producer.setCreditLimit(producer.getCreditLimit() - totalValue);
+
         Sale sale = saleMapper.toEntity(producer, saleItems, totalValue);
-        return saleRepository.save(sale);
+        sale = saleRepository.save(sale);
+        return saleMapper.toResponse(sale);
     }
 
     @Transactional
@@ -135,7 +139,7 @@ public class SaleService {
         return requestedItems.stream().map(itemDTO -> {
             Product product = productsById.get(itemDTO.productId());
             if (product == null) {
-                throw new EntityNotFoundException(Product.class, product.getId());
+                throw new EntityNotFoundException(Product.class, itemDTO.productId());
             }
             if (product.getStockQuantity() < itemDTO.quantity()) {
                 throw new InsufficientProductStockException(product);
@@ -164,5 +168,26 @@ public class SaleService {
         }
         return product.getPrice();
     }
-}
 
+    public SaleItemResponseDTO calculateItemPrice(SaleItemDTO dto) {
+        Product product = productRepository.findById(dto.productId())
+                .orElseThrow(() -> new EntityNotFoundException(Product.class, dto.productId()));
+
+        Double originalUnitPrice = product.getPrice();
+        Double finalPrice = originalUnitPrice;
+        Double discountValue = 0.0;
+
+        if (!product.getSafra().name().equals(SeasonUtils.getSeason(LocalDate.now()))) {
+            discountValue = originalUnitPrice * 0.05;
+            finalPrice = originalUnitPrice - discountValue;
+        }
+
+        return new SaleItemResponseDTO(
+                product.getId(),
+                dto.quantity(),
+                finalPrice,
+                originalUnitPrice,
+                discountValue);
+    }
+
+}

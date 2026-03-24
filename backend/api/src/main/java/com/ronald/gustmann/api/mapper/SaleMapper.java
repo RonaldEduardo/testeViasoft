@@ -16,8 +16,9 @@ public class SaleMapper {
                 .map(item -> new SaleItemResponseDTO(
                         item.getProduct().getId(),
                         item.getQuantity(),
-                        item.getPriceAtTimeOfSale()
-                ))
+                        item.getPriceAtTimeOfSale(),
+                        item.getProduct().getPrice(),
+                        item.getProduct().getPrice() - item.getPriceAtTimeOfSale()))
                 .toList();
         return new SaleResponseDTO(entity.getProducer().getId(), items, entity.getTotalValue());
     }
@@ -34,4 +35,3 @@ public class SaleMapper {
         return entities.stream().map(this::toResponse).toList();
     }
 }
-
