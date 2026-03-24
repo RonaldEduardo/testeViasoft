@@ -1,5 +1,11 @@
 <div class="p-6 max-w-lg mx-auto bg-brand-cream rounded-xl shadow-md space-y-4">
-  <h2 class="text-xl font-bold text-brand-ink">Novo Produto</h2>
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-semibold text-brand-ink">{{ isEditMode ? "Editar Produto" : "Novo Produto" }}</h2>
+    <a routerLink="/products" class="text-sm text-brand-charcoal hover:text-brand-ink inline-flex items-center gap-2">
+      <ng-icon name="back" class="h-4 w-4"></ng-icon>
+      <span>Voltar para produtos</span>
+    </a>
+  </div>
 
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-4">
     <div>
