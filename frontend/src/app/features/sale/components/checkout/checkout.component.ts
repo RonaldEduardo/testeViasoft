@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, takeUntil, finalize } from 'rxjs';
+import { Subject, takeUntil, finalize, forkJoin } from 'rxjs';
 
 import { SaleCreateDTO } from '../../dto/sale-create.dto';
 import { SaleItemRequestDTO } from '../../dto/sale-item-request.dto';
 import { Producer } from '../../models/producer';
 import { ProducerService } from '../../services/producer.service';
 import { SaleService } from '../../services/sale.service';
-import { SaleItemDTO } from '../../dto/saleItemDTO';
-import { SaleCreateResponseDTO } from '../../dto/sale-create-response.dto';
+import { SaleItemDTO } from '../../dto/sale-item.dto';
 import { CartService } from 'src/app/shared/services/cart.service';
-
+import { SaleResponseDTO } from '../../dto/sale-response.dto';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
@@ -36,23 +35,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private saleService: SaleService,
     private cartService: CartService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProducers();
 
     this.loadCartItems();
-
-    this.updateTotalValueFromCart();
-  }
-
-  private updateTotalValueFromCart() {
-    this.cartService.total$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((total) => {
-        this.totalValue = total;
-        this.appliedDiscountValue = 0;
-      });
   }
 
   private loadCartItems() {
@@ -60,7 +48,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((items) => {
         this.items = items;
-        this.appliedDiscountValue = 0;
+        this.updatePricesFromBackend();
       });
   }
 
@@ -94,7 +82,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cartService.removeFromCart(item.product.id);
   }
 
-  submitSale() {
+  OnSubmit() {
     this.errorMessage = '';
 
     if (this.checkoutForm.invalid) {
@@ -116,7 +104,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const payload: SaleCreateDTO = {
       producerId: Number(this.checkoutForm.controls['producerId'].value),
       items: mappedItems,
-      totalValue: this.totalValue,
+      totalValue: this.finalTotalValue,
     };
 
     this.isSubmitting = true;
@@ -132,13 +120,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.applyBackendCalculation(response);
+
           this.cartService.clearCart();
           this.router.navigate(['/products']);
         },
         error: (err) => {
           this.errorMessage =
             err?.error?.message ||
-            'Nao foi possivel finalizar a compra. Tente novamente.';
+            'Não foi possível finalizar a compra. Tente novamente.';
         },
       });
   }
@@ -147,19 +136,49 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return Math.max(this.totalValue - this.appliedDiscountValue, 0);
   }
 
-  private applyBackendCalculation(
-    response: SaleCreateResponseDTO | void,
-  ): void {
+  private applyBackendCalculation(response: SaleResponseDTO | void): void {
     if (!response) {
       return;
     }
-
-    this.appliedDiscountValue = response.discountTotal || 0;
-    this.totalValue = response.grossTotal || this.totalValue;
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private updatePricesFromBackend() {
+    if (this.items.length === 0) {
+      this.totalValue = 0;
+      this.appliedDiscountValue = 0;
+      return;
+    }
+
+    const requests = this.items.map((item) =>
+      this.saleService.calculateItem({
+        productId: item.product.id,
+        quantity: item.quantity,
+      }),
+    );
+
+    forkJoin(requests)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((calculatedItems) => {
+        let newTotal = 0;
+        let newDiscount = 0;
+
+        calculatedItems.forEach((calcInfo, index) => {
+          const item = this.items[index];
+
+          item.total = calcInfo.originalUnitPrice! * item.quantity;
+          item.product.price = calcInfo.originalUnitPrice!;
+
+          newTotal += item.total;
+          newDiscount += (calcInfo.discountValue || 0) * item.quantity;
+        });
+
+        this.totalValue = newTotal;
+        this.appliedDiscountValue = newDiscount;
+      });
   }
 }

@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { SaleCreateDTO } from '../dto/sale-create.dto';
-import { SaleCreateResponseDTO } from '../dto/sale-create-response.dto';
 import { SaleResponseDTO } from '../dto/sale-response.dto';
+import { SaleItemDTO } from '../dto/sale-item.dto';
+import { SaleItemResponseDTO } from '../dto/sale-item-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +14,12 @@ import { SaleResponseDTO } from '../dto/sale-response.dto';
 export class SaleService {
   private readonly API = `${environment.apiUrl}/sales`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  createSale(payload: SaleCreateDTO): Observable<SaleCreateResponseDTO | void> {
-    return this.http.post<SaleCreateResponseDTO | void>(
-      `${this.API}/create`,
-      payload,
-    );
+  createSale(payload: SaleCreateDTO): Observable<SaleResponseDTO> {
+    return this.http.post<SaleResponseDTO>(`${this.API}/create`, payload);
   }
+
 
   getAllSales(): Observable<SaleResponseDTO[]> {
     return this.http.get<SaleResponseDTO[]>(`${this.API}/all`);
@@ -29,4 +28,9 @@ export class SaleService {
   getSaleById(id: number): Observable<SaleResponseDTO> {
     return this.http.get<SaleResponseDTO>(`${this.API}/${id}`);
   }
+
+  calculateItem(payload: { productId: number, quantity: number }): Observable<SaleItemResponseDTO> {
+    return this.http.post<SaleItemResponseDTO>(`${this.API}/calculate-item`, payload);
+  }
+
 }

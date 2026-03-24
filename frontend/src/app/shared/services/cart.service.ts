@@ -1,7 +1,7 @@
 import { Product } from './../../features/product/models/product';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { SaleItemDTO } from 'src/app/features/sale/dto/saleItemDTO';
+import { SaleItemDTO } from 'src/app/features/sale/dto/sale-item.dto';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {

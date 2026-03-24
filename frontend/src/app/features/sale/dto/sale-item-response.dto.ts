@@ -3,7 +3,8 @@ export interface SaleItemResponseDTO {
   quantity: number;
   productName?: string;
   priceAtTimeOfSale?: number;
-  unitPrice?: number;
+  originalUnitPrice?: number;
+  discountValue?: number;
   total?: number;
   grossTotal?: number;
   netTotal?: number;

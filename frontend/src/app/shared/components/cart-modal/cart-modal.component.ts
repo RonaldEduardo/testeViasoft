@@ -1,4 +1,4 @@
-import { SaleItemDTO } from 'src/app/features/sale/dto/saleItemDTO';
+import { SaleItemDTO } from 'src/app/features/sale/dto/sale-item.dto';
 import { CartService } from './../../services/cart.service';
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';

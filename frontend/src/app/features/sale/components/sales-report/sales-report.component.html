@@ -19,7 +19,7 @@
     {{ errorMessage }}
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
     <div
       class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
     >
@@ -39,40 +39,6 @@
           {{ producer.name || "Produtor #" + producer.id }}
         </option>
       </select>
-    </div>
-
-    <div
-      class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
-    >
-      <label
-        for="periodStart"
-        class="block text-sm font-medium text-brand-charcoal mb-2"
-      >
-        Periodo inicial
-      </label>
-      <input
-        id="periodStart"
-        type="date"
-        [(ngModel)]="periodStart"
-        class="w-full rounded-md border border-brand-sage px-3 py-2 bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint"
-      />
-    </div>
-
-    <div
-      class="bg-brand-cream p-4 rounded-lg shadow-sm border border-brand-cream"
-    >
-      <label
-        for="periodEnd"
-        class="block text-sm font-medium text-brand-charcoal mb-2"
-      >
-        Periodo final
-      </label>
-      <input
-        id="periodEnd"
-        type="date"
-        [(ngModel)]="periodEnd"
-        class="w-full rounded-md border border-brand-sage px-3 py-2 bg-brand-alabaster focus:outline-none focus:ring-2 focus:ring-brand-mint"
-      />
     </div>
   </div>
 
@@ -108,9 +74,7 @@
         <tr>
           <th class="py-3 px-4 border-b text-left font-semibold">Venda</th>
           <th class="py-3 px-4 border-b text-left font-semibold">Produtor</th>
-          <th class="py-3 px-4 border-b text-left font-semibold">Itens</th>
           <th class="py-3 px-4 border-b text-left font-semibold">Total</th>
-          <th class="py-3 px-4 border-b text-center font-semibold">Detalhes</th>
         </tr>
       </thead>
 
@@ -129,22 +93,8 @@
             <td class="py-3 px-4 border-b text-brand-charcoal">
               {{ sale.producerName }}
             </td>
-            <td class="py-3 px-4 border-b text-brand-charcoal">
-              {{ sale.itemCount }}
-            </td>
             <td class="py-3 px-4 border-b text-brand-ink font-medium">
               {{ sale.totalValue | currency: "BRL" : "symbol" : "1.2-2" }}
-            </td>
-            <td class="py-3 px-4 border-b text-center">
-              <button
-                class="inline-flex items-center gap-2 text-brand-charcoal hover:text-brand-ink font-medium"
-                (click)="toggleItems(sale, i)"
-              >
-                <ng-icon name="products" class="h-4 w-4"></ng-icon>
-                <span>
-                  {{ isExpanded(sale, i) ? "Ocultar itens" : "Ver itens" }}
-                </span>
-              </button>
             </td>
           </tr>
 

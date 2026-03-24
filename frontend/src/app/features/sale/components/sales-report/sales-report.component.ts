@@ -12,8 +12,6 @@ interface SaleViewModel {
   producerId: number;
   producerName: string;
   totalValue: number;
-  itemCount: number;
-  periodDate: Date | null;
   rawItems: SaleItemResponseDTO[];
 }
 
@@ -49,9 +47,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
         !this.selectedProducerId ||
         sale.producerId === Number(this.selectedProducerId);
 
-      const matchesPeriod = this.matchesPeriodFilter(sale.periodDate);
-
-      return matchesProducer && matchesPeriod;
+      return matchesProducer;
     });
   }
 
@@ -85,8 +81,8 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       return item.priceAtTimeOfSale;
     }
 
-    if (item.unitPrice != null) {
-      return item.unitPrice;
+    if (item.originalUnitPrice != null) {
+      return item.originalUnitPrice;
     }
 
     if (item.quantity > 0) {
@@ -120,9 +116,8 @@ export class SalesReportComponent implements OnInit, OnDestroy {
     return '#' + (index + 1);
   }
 
-  trackBySale(_index: number, sale: SaleViewModel): string {
-    return this.saleKey(sale, _index);
-  }
+  trackBySale = (_index: number, sale: SaleViewModel): string =>
+    this.saleKey(sale, _index);
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -163,18 +158,12 @@ export class SalesReportComponent implements OnInit, OnDestroy {
   private mapSale(sale: SaleResponseDTO): SaleViewModel {
     const resolvedItems = sale.items || [];
     const resolvedTotal = this.resolveTotal(sale, resolvedItems);
-    const saleDate = this.resolveDate(sale);
 
     return {
-      saleId: sale.id ?? sale.saleId ?? null,
+      saleId: sale.id ?? null,
       producerId: sale.producerId,
-      producerName: this.resolveProducerName(
-        sale.producerId,
-        sale.producerName,
-      ),
+      producerName: this.resolveProducerName(sale.producerId),
       totalValue: resolvedTotal,
-      itemCount: resolvedItems.reduce((acc, item) => acc + item.quantity, 0),
-      periodDate: saleDate,
       rawItems: resolvedItems,
     };
   }
@@ -187,26 +176,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       return sale.totalValue;
     }
 
-    if (sale.netTotal != null) {
-      return sale.netTotal;
-    }
-
-    if (sale.grossTotal != null) {
-      return sale.grossTotal;
-    }
-
     return items.reduce((acc, item) => acc + this.getItemTotal(item), 0);
-  }
-
-  private resolveDate(sale: SaleResponseDTO): Date | null {
-    const rawDate = sale.createdAt || sale.saleDate;
-
-    if (!rawDate) {
-      return null;
-    }
-
-    const parsed = new Date(rawDate);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
 
   private refreshProducerName(sale: SaleViewModel): SaleViewModel {
@@ -226,32 +196,6 @@ export class SalesReportComponent implements OnInit, OnDestroy {
 
     const producer = this.producers.find((item) => item.id === producerId);
     return producer?.name || 'Produtor #' + producerId;
-  }
-
-  private matchesPeriodFilter(periodDate: Date | null): boolean {
-    if (!this.periodStart && !this.periodEnd) {
-      return true;
-    }
-
-    if (!periodDate) {
-      return false;
-    }
-
-    if (this.periodStart) {
-      const startDate = new Date(this.periodStart + 'T00:00:00');
-      if (periodDate < startDate) {
-        return false;
-      }
-    }
-
-    if (this.periodEnd) {
-      const endDate = new Date(this.periodEnd + 'T23:59:59.999');
-      if (periodDate > endDate) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   private saleKey(sale: SaleViewModel, index: number): string {
