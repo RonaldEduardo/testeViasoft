@@ -91,7 +91,6 @@ export class ProductFormComponent implements OnInit {
     this.productId = id;
     this.isEditMode = true;
 
-    console.log('Edit mode detected, loading product with id:', id); // Debug log
     this.mapToForm(id);
   }
 
