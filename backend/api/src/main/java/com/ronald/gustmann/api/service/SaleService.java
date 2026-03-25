@@ -163,7 +163,7 @@ public class SaleService {
     }
 
     private Double calculatePriceAtTimeOfSale(Product product) {
-        double discountRate = SeasonUtils.getSeason(LocalDate.now()).equals(product.getSafra()) ? 0.05 : 0.0;
+        double discountRate = SeasonUtils.getSeason(LocalDate.now()).equals(product.getSafra().toString()) ? 0.05 : 0.0;
         return product.getPrice() * (1 - discountRate);
     }
 
