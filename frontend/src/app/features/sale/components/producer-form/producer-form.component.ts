@@ -14,6 +14,7 @@ export class ProducerFormComponent implements OnInit {
   producerForm!: FormGroup;
   producerId: number | null = null;
   isEditMode = false;
+  notFound = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,16 +53,24 @@ export class ProducerFormComponent implements OnInit {
     this.producerId = id;
     this.isEditMode = true;
 
+    this.producerForm.get('cnpj')?.disable({ emitEvent: false });
+
     this.mapToForm(id);
   }
 
   private mapToForm(id: number): void {
-    this.producerService.findById(id).subscribe((producer: Producer) => {
-      this.producerForm.patchValue({
-        name: producer.name,
-        creditLimit: producer.creditLimit,
-        cnpj: producer.cnpj,
-      });
+    this.producerService.findById(id).subscribe({
+      next: (producer: Producer) => {
+        this.producerForm.patchValue({
+          name: producer.name,
+          creditLimit: producer.creditLimit,
+          cnpj: producer.cnpj,
+        });
+      },
+      error: () => {
+        this.notFound = true;
+        this.producerForm.disable({ emitEvent: false });
+      },
     });
   }
 
@@ -79,13 +88,13 @@ export class ProducerFormComponent implements OnInit {
 
     if (this.isEditMode && this.producerId !== null) {
       this.producerService.update(this.producerId, payload).subscribe(() => {
-        this.router.navigate(['/checkout']);
+        this.router.navigate(['/producers']);
       });
       return;
     }
 
     this.producerService.create(payload).subscribe(() => {
-      this.router.navigate(['/checkout']);
+      this.router.navigate(['/producers']);
     });
   }
 }

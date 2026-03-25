@@ -36,7 +36,7 @@ public class ProducerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProducerResponseDTO> findProducerById(@PathVariable Long id) {
+    public ResponseEntity<ProducerResponseDTO> findProducerById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(producerService.findById(id));
     }
 
@@ -46,13 +46,13 @@ public class ProducerController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProducerResponseDTO> update(@PathVariable Long id,
+    public ResponseEntity<ProducerResponseDTO> update(@PathVariable("id") Long id,
             @Valid @RequestBody ProducerRequestDTO dto) {
         return ResponseEntity.ok().body(producerService.update(id, dto));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         producerService.delete(id);
         return ResponseEntity.noContent().build();
     }

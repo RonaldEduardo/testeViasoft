@@ -13,6 +13,7 @@ import { IconsModule } from './shared/icons.module';
 import { SalesReportComponent } from './features/sale/components/sales-report/sales-report.component';
 import { ProducerFormComponent } from './features/sale/components/producer-form/producer-form.component';
 import { CnpjMaskDirective } from './shared/directives/cnpj-mask.directive';
+import { ProducerListComponent } from './features/sale/components/producer-list/producer-list.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CnpjMaskDirective } from './shared/directives/cnpj-mask.directive';
     CheckoutComponent,
     SalesReportComponent,
     ProducerFormComponent,
+    ProducerListComponent,
     CnpjMaskDirective,
   ],
   imports: [

@@ -24,7 +24,7 @@ public class SaleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SaleResponseDTO> findSaleById(@PathVariable Long id) {
+    public ResponseEntity<SaleResponseDTO> findSaleById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(saleService.findById(id));
     }
 
@@ -34,12 +34,12 @@ public class SaleController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SaleResponseDTO> update(@PathVariable Long id, @Valid @RequestBody SaleRequestDTO dto) {
+    public ResponseEntity<SaleResponseDTO> update(@PathVariable("id") Long id, @Valid @RequestBody SaleRequestDTO dto) {
         return ResponseEntity.ok().body(saleService.update(id, dto));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         saleService.delete(id);
         return ResponseEntity.noContent().build();
     }

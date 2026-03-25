@@ -5,11 +5,14 @@ import { ProductListComponent } from './features/product/components/product-list
 import { CheckoutComponent } from './features/sale/components/checkout/checkout.component';
 import { SalesReportComponent } from './features/sale/components/sales-report/sales-report.component';
 import { ProducerFormComponent } from './features/sale/components/producer-form/producer-form.component';
+import { ProducerListComponent } from './features/sale/components/producer-list/producer-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/products', pathMatch: 'full' },
 
   { path: 'products', component: ProductListComponent },
+
+  { path: 'producers', component: ProducerListComponent },
 
   { path: 'checkout', component: CheckoutComponent },
 
