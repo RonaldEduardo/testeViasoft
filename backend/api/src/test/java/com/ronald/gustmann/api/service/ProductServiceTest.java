@@ -21,10 +21,6 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-    // -------------------------------------------------------
-    // Criação de produto
-    // -------------------------------------------------------
-
     @Test
     @DisplayName("Deve criar produto do tipo FERTILIZANTE com sucesso")
     void deveCriarProdutoFertilizante() {
@@ -73,10 +69,6 @@ class ProductServiceTest {
         assertThat(saved.getId()).isNotNull();
     }
 
-    // -------------------------------------------------------
-    // Busca por ID
-    // -------------------------------------------------------
-
     @Test
     @DisplayName("Deve lançar EntityNotFoundException ao buscar produto inexistente")
     void deveLancarExcecaoQuandoProdutoNaoEncontrado() {
@@ -102,10 +94,6 @@ class ProductServiceTest {
         assertThat(found.price()).isEqualTo(80.00);
         assertThat(found.category()).isEqualTo(Category.SEMENTE);
     }
-
-    // -------------------------------------------------------
-    // Exclusão
-    // -------------------------------------------------------
 
     @Test
     @DisplayName("Deve lançar EntityNotFoundException ao deletar produto inexistente")

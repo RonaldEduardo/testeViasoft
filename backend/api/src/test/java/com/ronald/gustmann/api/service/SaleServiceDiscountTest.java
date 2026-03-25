@@ -33,11 +33,9 @@ class SaleServiceDiscountTest {
 
     @BeforeEach
     void setUp() {
-        // Determina a safra atual para montar os cenários dinamicamente
         String safraAtualNome = SeasonUtils.getSeason(LocalDate.now());
         Safra safraAtual = Safra.valueOf(safraAtualNome);
 
-        // Produto cuja safra CORRESPONDE à estação atual → deve ter desconto
         productDaSafraAtual = new Product();
         productDaSafraAtual.setName("Produto da Safra Atual");
         productDaSafraAtual.setPrice(100.00);
@@ -46,7 +44,6 @@ class SaleServiceDiscountTest {
         productDaSafraAtual.setSafra(safraAtual);
         productDaSafraAtual = productRepository.save(productDaSafraAtual);
 
-        // Produto cuja safra NÃO corresponde → sem desconto
         Safra safraDistinta = safraAtual == Safra.VERAO ? Safra.INVERNO : Safra.VERAO;
 
         productDeSafraDistinta = new Product();
@@ -90,7 +87,6 @@ class SaleServiceDiscountTest {
 
         SaleItemResponseDTO result = saleService.calculateItemPrice(dto);
 
-        // O descountValue retornado é por unidade, não pelo total
         assertThat(result.discountValue()).isEqualTo(5.00, within(0.001));
         assertThat(result.quantity()).isEqualTo(3);
     }
