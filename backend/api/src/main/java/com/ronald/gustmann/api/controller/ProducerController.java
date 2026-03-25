@@ -4,11 +4,14 @@ import com.ronald.gustmann.api.dto.producer.ProducerCreateDTO;
 import com.ronald.gustmann.api.dto.producer.ProducerRequestDTO;
 import com.ronald.gustmann.api.dto.producer.ProducerResponseDTO;
 import com.ronald.gustmann.api.dto.product.ProductCreateDTO;
+import com.ronald.gustmann.api.model.Producer;
 import com.ronald.gustmann.api.service.ProducerService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,8 +25,14 @@ public class ProducerController {
 
     @PostMapping("/create")
     public ResponseEntity<ProducerResponseDTO> create(@Valid @RequestBody ProducerCreateDTO producerCreateDTO) {
-        producerService.create(producerCreateDTO);
-        return ResponseEntity.created(null).build(); // TODO: analise sobre o location
+        Producer savedProducer = producerService.create(producerCreateDTO);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedProducer.getId())
+                .toUri();
+        return ResponseEntity.created(
+                uri).build();
     }
 
     @GetMapping("/{id}")
@@ -32,12 +41,13 @@ public class ProducerController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProducerResponseDTO>> findAllProducers(ProductCreateDTO productCreateDTO) {
+    public ResponseEntity<List<ProducerResponseDTO>> findAllProducers() {
         return ResponseEntity.ok(producerService.findAll());
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProducerResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ProducerRequestDTO dto) {
+    public ResponseEntity<ProducerResponseDTO> update(@PathVariable Long id,
+            @Valid @RequestBody ProducerRequestDTO dto) {
         return ResponseEntity.ok().body(producerService.update(id, dto));
     }
 

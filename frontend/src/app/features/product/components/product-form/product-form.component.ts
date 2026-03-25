@@ -114,9 +114,11 @@ export class ProductFormComponent implements OnInit {
       });
       return;
     }
-
-    this.productService.create(payload).subscribe(() => {
-      this.router.navigate(['/products']);
+    this.productService.create(payload).subscribe({
+      next: (response) => {
+        this.router.navigate(['/products']);
+      },
+      error: (err) => console.error('Erro na criação', err),
     });
   }
 

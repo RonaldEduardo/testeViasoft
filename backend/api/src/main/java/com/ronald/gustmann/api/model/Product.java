@@ -1,6 +1,5 @@
 package com.ronald.gustmann.api.model;
 
-
 import com.ronald.gustmann.api.model.enums.Category;
 import com.ronald.gustmann.api.model.enums.Safra;
 import jakarta.persistence.*;
@@ -27,10 +26,10 @@ public class Product {
     @Column(length = 20)
     private Category category;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private Double price;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String recipeProduct;
 
     @Column(nullable = false)

@@ -119,7 +119,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          this.applyBackendCalculation(response);
 
           this.cartService.clearCart();
           this.router.navigate(['/products']);
@@ -136,11 +135,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return Math.max(this.totalValue - this.appliedDiscountValue, 0);
   }
 
-  private applyBackendCalculation(response: SaleResponseDTO | void): void {
-    if (!response) {
-      return;
-    }
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

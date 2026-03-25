@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Table(name = "sales")
 @Getter
@@ -28,7 +27,7 @@ public class Sale {
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SaleItem> saleItems = new ArrayList<>();
 
-    @Column(length = 20)
+    @Column
     private Double totalValue;
 
     public void setSaleItems(List<SaleItem> saleItems) {

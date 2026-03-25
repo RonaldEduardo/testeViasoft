@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { environment } from '../../../../environments/environment';
 
@@ -12,9 +12,10 @@ export class ProductService {
   private readonly API = `${environment.apiUrl}/products`;
 
   constructor(private http: HttpClient) {}
-
-  create(product: Product): Observable<Product> {
-    return this.http.post<Product>(`${this.API}/create`, product);
+  create(product: Product): Observable<HttpResponse<Product>> {
+    return this.http.post<Product>(`${this.API}/create`, product, {
+      observe: 'response',
+    });
   }
 
   getProducts(): Observable<Product[]> {

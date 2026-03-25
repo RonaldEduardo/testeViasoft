@@ -31,4 +31,3 @@ public class SaleItem {
     @Column(nullable = false)
     private Double priceAtTimeOfSale;
 }
-

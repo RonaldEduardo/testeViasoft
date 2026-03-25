@@ -9,6 +9,10 @@ import com.ronald.gustmann.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -20,18 +24,24 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
-        productService.create(productCreateDTO);
-        return ResponseEntity.created(null).build();
+    public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductCreateDTO productCreateDTO) {
+        Product savedProduct = productService.create(productCreateDTO);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedProduct.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(productService.findById(savedProduct.getId()));
     }
 
     @GetMapping
-    public ResponseEntity findAllProduct(ProductCreateDTO productCreateDTO) {
-            return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<ProductResponseDTO>> findAllProduct(ProductCreateDTO productCreateDTO) {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> findProducerById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 

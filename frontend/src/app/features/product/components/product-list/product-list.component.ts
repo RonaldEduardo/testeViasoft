@@ -38,7 +38,6 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-    console.log('Adicionando ao carrinho:', product);
     this.cartService.addToCart(product);
   }
 

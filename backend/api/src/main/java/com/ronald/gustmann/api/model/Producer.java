@@ -23,6 +23,6 @@ public class Producer {
     @Column(length = 14)
     private String cnpj;
 
-    @Column(length = 20)
+    @Column
     private Double creditLimit;
 }
