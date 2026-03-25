@@ -1,6 +1,6 @@
 export interface Producer {
   id: number;
-  name?: string;
+  name: string;
   cnpj: string;
   creditLimit: number;
 }

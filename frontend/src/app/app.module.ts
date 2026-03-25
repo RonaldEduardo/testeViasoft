@@ -11,6 +11,8 @@ import { CheckoutComponent } from './features/sale/components/checkout/checkout.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IconsModule } from './shared/icons.module';
 import { SalesReportComponent } from './features/sale/components/sales-report/sales-report.component';
+import { ProducerFormComponent } from './features/sale/components/producer-form/producer-form.component';
+import { CnpjMaskDirective } from './shared/directives/cnpj-mask.directive';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { SalesReportComponent } from './features/sale/components/sales-report/sa
     CartModalComponent,
     CheckoutComponent,
     SalesReportComponent,
+    ProducerFormComponent,
+    CnpjMaskDirective,
   ],
   imports: [
     BrowserModule,

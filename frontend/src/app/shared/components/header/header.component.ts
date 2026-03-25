@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
   menu = [
     { label: 'Produtos', link: '/products', icon: 'products' },
     { label: 'Novo Produto', link: '/products/new', icon: 'newProduct' },
+    { label: 'Novo Produtor', link: '/producers/new', icon: 'newProduct' },
     { label: 'Finalizar', link: '/checkout', icon: 'checkout' },
     { label: 'Minhas Vendas', link: '/sales', icon: 'products' },
   ];
