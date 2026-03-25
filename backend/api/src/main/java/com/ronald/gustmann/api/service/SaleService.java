@@ -163,10 +163,14 @@ public class SaleService {
     }
 
     private Double calculatePriceAtTimeOfSale(Product product) {
-        if (product.getSafra().name().equals(SeasonUtils.getSeason(LocalDate.now()))) {
-            return product.getPrice() * 0.95;
+        Double originalUnitPrice = product.getPrice();
+        Double finalPrice = originalUnitPrice;
+        if (!product.getSafra().name().equals(SeasonUtils.getSeason(LocalDate.now()))) {
+           Double discountValue = product.getPrice() * 0.05;
+           finalPrice = originalUnitPrice - discountValue;
         }
-        return product.getPrice();
+
+        return finalPrice;
     }
 
     public SaleItemResponseDTO calculateItemPrice(SaleItemDTO dto) {
